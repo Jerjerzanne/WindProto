@@ -59,8 +59,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\FPSCamera.cs" />
-    <Compile Include="Assets\movement.cs" />
+    <Compile Include="Assets\Scripts\FPSCamera.cs" />
+    <Compile Include="Assets\Scripts\movement.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Sim/Documents/Windmill/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
