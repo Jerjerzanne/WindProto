@@ -9,7 +9,7 @@ public class Movement : MonoBehaviour {
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
     private bool flightMode = false;
-
+    private float momentum = 0.0F;
     void Update()
     {
         CharacterController controller = GetComponent<CharacterController>();
@@ -21,17 +21,31 @@ public class Movement : MonoBehaviour {
             moveDirection *= speed;
             if (Input.GetButton("Jump"))
             {
+                momentum = Input.GetAxis("Vertical");
                 moveDirection.y = jumpSpeed;
             }
         }
 
-        //if (!controller.isGrounded)
-        //{
-        //    if (Input.GetKeyDown("E"))
-        //    {
-        //        flightMode = !flightMode;
-        //    }
-           
+        if (!controller.isGrounded)
+        {
+            if (Input.GetKeyDown("e"))
+            {
+                flightMode = !flightMode;
+            }
+
+            if (flightMode)
+            {
+                moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, momentum);
+                moveDirection = transform.TransformDirection(moveDirection);
+                moveDirection *= speed;
+                if (Input.GetButton("Jump"))
+                {
+                    moveDirection.y = jumpSpeed;
+                }
+                
+            }
+            
+        }
         //    moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
         //    moveDirection = transform.TransformDirection(moveDirection);
         //    moveDirection *= speed;
@@ -41,21 +55,23 @@ public class Movement : MonoBehaviour {
         //    }
         //}
 
-        //if (flightMode)
-        //{
-        //    moveDirection.y -= 0.5f * gravity * Time.deltaTime;
-        //    controller.Move(moveDirection * Time.deltaTime);
-        //}
-        //else
-        //{
+        if (flightMode)
+        {
+            moveDirection.y -= 0.5f * gravity * Time.deltaTime;
+            controller.Move(moveDirection * Time.deltaTime);
+        }
+        else
+        {
             moveDirection.y -= gravity * Time.deltaTime;
             controller.Move(moveDirection * Time.deltaTime);
-        
+        }
     }
 
     void OnGUI()
     {
-        GUI.Button(new Rect(10, 10, 150, 100), "flightMode: "+flightMode);
+        GUI.Button(new Rect(10, 10, 250, 40), "flightMode: "+flightMode);
+        GUI.Button(new Rect(10, 50, 250, 40), "moveDirection: " + moveDirection);
+       
     }
 }
 

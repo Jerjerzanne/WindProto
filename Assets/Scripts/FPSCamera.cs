@@ -31,7 +31,6 @@ public class FPSCamera : MonoBehaviour
         float predictedRotation = 0;
         if (verticalShift > 0 && xAngle >= upperAngle) // moving up while looking up
         {
-            Debug.Log("red");
             predictedRotation = xAngle - verticalShift;
             Debug.Log(predictedRotation);
             if (predictedRotation <= upperAngle)
@@ -39,15 +38,12 @@ public class FPSCamera : MonoBehaviour
                 camera.transform.Rotate(upperAngle - xAngle, 0, 0);
             }
             else
-            {
-                Debug.Log(predictedRotation + " > " + upperAngle);
+            {  
                 camera.transform.Rotate(-verticalShift, 0 , 0);
-                Debug.Log(camera.transform.eulerAngles);
             }
         }
         else if (verticalShift > 0 && xAngle <= lowerAngle)  // moving up while looking down
         {
-            Debug.Log("green");
             predictedRotation = xAngle - verticalShift;
             if (predictedRotation < 0 && predictedRotation <= (upperAngle - 360.0f))
             {
@@ -59,8 +55,7 @@ public class FPSCamera : MonoBehaviour
             }
         }
         else if (verticalShift < 0 && xAngle >= upperAngle) // moving down while looking up
-        {
-            Debug.Log("yellow");
+        { 
             predictedRotation = xAngle - verticalShift;
             if (predictedRotation > 360 && (predictedRotation % 360 > lowerAngle))
             {
@@ -73,7 +68,6 @@ public class FPSCamera : MonoBehaviour
         }
         else if (verticalShift < 0 && xAngle <= lowerAngle) // moving down while looking down
         {
-            Debug.Log("Blue");
             predictedRotation = xAngle - verticalShift;
             if (predictedRotation >= lowerAngle)
             {
@@ -84,19 +78,18 @@ public class FPSCamera : MonoBehaviour
                 camera.transform.Rotate(-verticalShift, 0, 0);
             }
         }
-
        
     }
 
-    void OnGUI()
-    {
-        float h = horizontalSpeed * Input.GetAxis("Mouse X");
-        float v = verticalSpeed * Input.GetAxis("Mouse Y");
-        GUI.Button(new Rect(10, 100, 200, 50), "zAngle: " + camera.transform.eulerAngles.z);
-        GUI.Button(new Rect(10, 150, 200, 50), "xAngle: " + camera.transform.eulerAngles.x);
-        GUI.Button(new Rect(10, 200, 100, 50), "h: " + h);
-        GUI.Button(new Rect(10, 250, 100, 50), "v: " + v);
-    }
+    //void OnGUI()
+    //{
+    //    float h = horizontalSpeed * Input.GetAxis("Mouse X");
+    //    float v = verticalSpeed * Input.GetAxis("Mouse Y");
+    //    GUI.Button(new Rect(10, 100, 200, 50), "zAngle: " + camera.transform.eulerAngles.z);
+    //    GUI.Button(new Rect(10, 150, 200, 50), "xAngle: " + camera.transform.eulerAngles.x);
+    //    GUI.Button(new Rect(10, 200, 100, 50), "h: " + h);
+    //    GUI.Button(new Rect(10, 250, 100, 50), "v: " + v);
+    //}
 }
 
 //Debug.DrawRay(camera.transform.position, camera.transform.forward, Color.green);
