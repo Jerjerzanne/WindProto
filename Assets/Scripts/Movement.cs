@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour {
+public class Movement : MonoBehaviour
+{
 
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
@@ -11,6 +12,7 @@ public class Movement : MonoBehaviour {
     private bool flightMode = false;
     private float momentum = 0.0F;
     private GameObject camera;
+    public bool showGUI = false;
 
     void Start()
     {
@@ -19,6 +21,9 @@ public class Movement : MonoBehaviour {
 
     void Update()
     {
+        if (Input.GetKeyUp("o"))
+            showGUI = !showGUI;
+
         CharacterController controller = GetComponent<CharacterController>();
         if (controller.isGrounded)
         {
@@ -34,10 +39,15 @@ public class Movement : MonoBehaviour {
 
         if (!controller.isGrounded)
         {
-            if (Input.GetKeyDown("e"))
+            if (Input.GetKeyDown("left shift"))
             {
-                flightMode = !flightMode;
+                flightMode = true;
                 momentum = controller.velocity.magnitude;
+            }
+
+            if (Input.GetKeyUp("left shift"))
+            {
+                flightMode = false;
                 moveDirection = camera.transform.forward * momentum;
             }
 
@@ -56,7 +66,7 @@ public class Movement : MonoBehaviour {
                 }
                 else
                 {
-                    cameraAngle = cameraAngle % 90 /90;
+                    cameraAngle = cameraAngle % 90 / 90;
                     angleBoostD = 1 - cameraAngle;
                     angleBoostF = cameraAngle;
                     momentum = momentum - angleBoostD * Time.deltaTime;
@@ -66,9 +76,9 @@ public class Movement : MonoBehaviour {
                 {
                     moveDirection.y = jumpSpeed;
                 }
-                
+
             }
-            
+
         }
 
         if (flightMode)
@@ -84,10 +94,15 @@ public class Movement : MonoBehaviour {
 
     void OnGUI()
     {
-        GUI.Button(new Rect(10, 10, 250, 40), "flightMode: "+flightMode);
-        GUI.Button(new Rect(10, 50, 250, 40), "moveDirection: " + moveDirection);
-        GUI.Button(new Rect(10, 90, 250, 40), "rotation: " + camera.transform.rotation);
-        GUI.Button(new Rect(10, 130, 250, 40), "velocity: " + GetComponent<CharacterController>().velocity.magnitude);
+        if (showGUI == true)
+        {
+            GUI.Button(new Rect(10, 10, 250, 40), "flightMode: " + flightMode);
+            GUI.Button(new Rect(10, 50, 250, 40), "moveDirection: " + moveDirection);
+            GUI.Button(new Rect(10, 90, 250, 40), "rotation: " + camera.transform.rotation);
+            GUI.Button(new Rect(10, 130, 250, 40),
+                "velocity: " + GetComponent<CharacterController>().velocity.magnitude);
+        }
     }
-}
 
+
+}

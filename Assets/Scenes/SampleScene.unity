@@ -999,6 +999,7 @@ MonoBehaviour:
   speed: 6
   jumpSpeed: 8
   gravity: 30
+  showGUI: 1
 --- !u!33 &858165285
 MeshFilter:
   m_ObjectHideFlags: 0
