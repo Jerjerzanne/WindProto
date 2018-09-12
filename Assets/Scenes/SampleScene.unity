@@ -998,7 +998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   jumpSpeed: 8
-  gravity: 20
+  gravity: 30
 --- !u!33 &858165285
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1037,7 +1037,7 @@ MonoBehaviour:
   horizontalSpeed: 2
   verticalSpeed: 2
   lowerAngle: 80
-  upperAngle: 300
+  upperAngle: 280
 --- !u!4 &858165288
 Transform:
   m_ObjectHideFlags: 0

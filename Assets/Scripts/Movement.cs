@@ -9,8 +9,14 @@ public class Movement : MonoBehaviour {
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
     private bool flightMode = false;
-    private float fMomentum = 0.0F;
-    private float dMomentum = 0.0F;
+    private float momentum = 0.0F;
+    private GameObject camera;
+
+    void Start()
+    {
+        camera = GameObject.FindGameObjectWithTag("MainCamera");
+    }
+
     void Update()
     {
         CharacterController controller = GetComponent<CharacterController>();
@@ -22,8 +28,6 @@ public class Movement : MonoBehaviour {
             moveDirection *= speed;
             if (Input.GetButton("Jump"))
             {
-                fMomentum = Input.GetAxis("Vertical") * speed;
-
                 moveDirection.y = jumpSpeed;
             }
         }
@@ -33,12 +37,13 @@ public class Movement : MonoBehaviour {
             if (Input.GetKeyDown("e"))
             {
                 flightMode = !flightMode;
-
+                momentum = controller.velocity.magnitude;
+                moveDirection = camera.transform.forward * momentum;
             }
 
             if (flightMode)
             {
-                float cameraAngle = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles.x;
+                float cameraAngle = camera.transform.eulerAngles.x;
                 float angleBoostD = 0.0F;
                 float angleBoostF = 0.0F;
                 if (cameraAngle < 90 && cameraAngle > 0)
@@ -46,20 +51,17 @@ public class Movement : MonoBehaviour {
                     cameraAngle = cameraAngle / 90;
                     angleBoostD = cameraAngle;
                     angleBoostF = 1 - cameraAngle;
+                    momentum = momentum + angleBoostD * Time.deltaTime;
+
                 }
                 else
                 {
                     cameraAngle = cameraAngle % 90 /90;
                     angleBoostD = 1 - cameraAngle;
                     angleBoostF = cameraAngle;
+                    momentum = momentum - angleBoostD * Time.deltaTime;
                 }
-                Debug.Log("dBoost: " + angleBoostD);
-                Debug.Log("fBoost: " + angleBoostF);
-                dMomentum = moveDirection.y - gravity * Time.deltaTime * angleBoostD;
-                fMomentum = fMomentum + gravity * Time.deltaTime * angleBoostF;
-                moveDirection = new Vector3(Input.GetAxis("Horizontal")* speed, dMomentum, fMomentum );
-                moveDirection = transform.TransformDirection(moveDirection);
-                //moveDirection *= speed;
+
                 if (Input.GetButtonDown("Jump"))
                 {
                     moveDirection.y = jumpSpeed;
@@ -71,8 +73,7 @@ public class Movement : MonoBehaviour {
 
         if (flightMode)
         {
-            //moveDirection.y -= gravity * Time.deltaTime;
-            controller.Move(moveDirection * Time.deltaTime);
+            controller.Move(camera.transform.forward * momentum * Time.deltaTime);
         }
         else
         {
@@ -85,7 +86,8 @@ public class Movement : MonoBehaviour {
     {
         GUI.Button(new Rect(10, 10, 250, 40), "flightMode: "+flightMode);
         GUI.Button(new Rect(10, 50, 250, 40), "moveDirection: " + moveDirection);
-        GUI.Button(new Rect(10, 90, 250, 40), "rotation: " + GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles);
+        GUI.Button(new Rect(10, 90, 250, 40), "rotation: " + camera.transform.rotation);
+        GUI.Button(new Rect(10, 130, 250, 40), "velocity: " + GetComponent<CharacterController>().velocity.magnitude);
     }
 }
 
