@@ -35,7 +35,7 @@ public class FPSCamera : MonoBehaviour
             Debug.Log(predictedRotation);
             if (predictedRotation <= upperAngle)
             {
-                camera.transform.Rotate(upperAngle - xAngle, 0, 0);
+                camera.transform.Rotate(upperAngle - xAngle + 0.01F, 0, 0);
             }
             else
             {  

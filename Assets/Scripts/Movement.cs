@@ -28,6 +28,7 @@ public class Movement : MonoBehaviour
         if (controller.isGrounded)
         {
             flightMode = false;
+            momentum = 0;
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
@@ -55,26 +56,24 @@ public class Movement : MonoBehaviour
             {
                 float cameraAngle = camera.transform.eulerAngles.x;
                 float angleBoostD = 0.0F;
-                float angleBoostF = 0.0F;
                 if (cameraAngle < 90 && cameraAngle > 0)
                 {
                     cameraAngle = cameraAngle / 90;
                     angleBoostD = cameraAngle;
-                    angleBoostF = 1 - cameraAngle;
-                    momentum = momentum + angleBoostD * Time.deltaTime;
-
+                    momentum = momentum + angleBoostD * gravity * Time.deltaTime;
                 }
                 else
                 {
                     cameraAngle = cameraAngle % 90 / 90;
                     angleBoostD = 1 - cameraAngle;
-                    angleBoostF = cameraAngle;
-                    momentum = momentum - angleBoostD * Time.deltaTime;
+                    momentum = momentum - angleBoostD * gravity * Time.deltaTime;
+                    if (momentum < 0)
+                        momentum = 0;
                 }
 
                 if (Input.GetButtonDown("Jump"))
                 {
-                    moveDirection.y = jumpSpeed;
+                    momentum += jumpSpeed;
                 }
 
             }
@@ -83,7 +82,14 @@ public class Movement : MonoBehaviour
 
         if (flightMode)
         {
-            controller.Move(camera.transform.forward * momentum * Time.deltaTime);
+            if (Input.GetKey("s"))
+            {
+                controller.Move(camera.transform.forward * momentum * 0.5F * Time.deltaTime);
+            }
+            else
+            {
+                controller.Move(camera.transform.forward * momentum * Time.deltaTime);
+            }
         }
         else
         {
